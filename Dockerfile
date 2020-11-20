@@ -6,7 +6,10 @@ RUN apt-get update && apt-get install -y python3-dev build-essential
 RUN mkdir -p /usr/src/
 
 COPY requirements.txt .
+COPY ee_token.py .
+
 RUN pip3 install -r requirements.txt
+RUN python3 ee_token.py
 
 COPY . .
 

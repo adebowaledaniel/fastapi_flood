@@ -1,0 +1,11 @@
+{% block header %}
+  <h1>Earth Engine is alive!</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+      <input type="submit">
+    </form>
+    Return to <a href="{{ url_for('home') }}"> home page </a>
+{% endblock %}
+{% extends 'ee_map.html' %} 

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <!-- Leaflet css and js-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+    <!-- Leaflet css and js-->
+    <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
+    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', path='css/map.css') }}">
+  </head>
+  <body>
+      <div id="mapid"></div>
+      <script>
+        var map = L.map('mapid').setView([-11.97586, -77.08767], 18);
+        
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(map);
+        L.tileLayer('https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/maps/da62849f706c6d8156a87871c97d4845-9afa3fbbf858333898e64e58513956c8/tiles/{z}/{x}/{y}').addTo(map);
+        L.marker([-11.97586, -77.08767]).addTo(map)
+        .bindPopup('Pato & Roy ... forever <3 (nidito de amor)')
+        .openPopup();
+        
+        // add leaflet-geoman controls with some options to the map
+        map.pm.addControls({
+          position: 'topleft',
+          drawCircle: false,
+          drawMarker: false,
+          drawCircleMarker: false,
+          drawPolyline: false,
+          drawPolygon: false,
+          editMode: false,
+          cutPolygon: false
+        });
+      </script>
+  </body>
+</html>
