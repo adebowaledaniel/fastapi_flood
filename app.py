@@ -16,17 +16,3 @@ async def home(request: Request):
 @app.get("/methodology")
 async def methodology(request: Request):
     return templates.TemplateResponse("methodology.html", {"request": request, "year":2020})
-
-@app.get("/map")
-async def map(request: Request):
-    basemap_addtext = "        //earthengine_space;\n" 
-    replace_line('templates/ee_map.html', 24, basemap_addtext)
-    return templates.TemplateResponse("map_template.html", {"request": request})
-
-@app.post('/map')
-def form_post(request: Request):
-    basemap = simple_eemap()
-    basemap_addtext = "        L.tileLayer('%s').addTo(map);\n" % basemap
-    replace_line('templates/ee_map.html', 24, basemap_addtext)
-    return templates.TemplateResponse('map_template.html', {'request': request})
-
