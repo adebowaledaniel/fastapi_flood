@@ -19,10 +19,10 @@
   <body>
       <div id="mapid"></div>
       <script>
-        var map = L.map('mapid').setView([-11.97586, -77.08767], 18);
+        var map = L.map('mapid').setView([0, 0], 2);
         
         L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(map);
-        L.tileLayer('https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/maps/da62849f706c6d8156a87871c97d4845-71a5f03f0aec29e3179c3454edbb6234/tiles/{z}/{x}/{y}').addTo(map);
+        L.tileLayer('https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/maps/da62849f706c6d8156a87871c97d4845-ef826cafa57e78f4d88499250490927e/tiles/{z}/{x}/{y}').addTo(map);
         L.marker([-11.97586, -77.08767]).addTo(map)
         .bindPopup('Pato & Roy ... forever <3 (nidito de amor)')
         .openPopup();
