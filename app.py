@@ -9,7 +9,7 @@ from fastapi.templating import Jinja2Templates
 set_heroku_vars(token_name='EARTHENGINE_TOKEN')
 
 # Earth Engine
-# ee.Initialize()
+ee.Initialize()
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
