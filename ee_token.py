@@ -9,8 +9,7 @@ def set_heroku_vars(token_name='EARTHENGINE_TOKEN'):
         token_name (str, optional): Name of the Earth Engine token. Defaults to 'EARTHENGINE_TOKEN'.
     """
     try:
-        ee_token_dir = "/app/.config/earthengine/"
-        os.mkdir(ee_token_dir)
+        ee_token_dir = "/app/.config/earthengine/"        
         ee_token_file = os.path.join(ee_token_dir, 'credentials')
 
         if not os.path.exists(ee_token_file):
