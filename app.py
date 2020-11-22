@@ -1,12 +1,14 @@
-from src.map_display import *
-from src.init_ee import ee_Initialize 
+from fileinput import FileInput
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from src import ee_map
+from src import utils
+
 # Init Earth Engine
-ee_Initialize()
+utils.ee_Initialize()
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -23,14 +25,10 @@ async def methodology(request: Request):
 
 @app.get("/map")
 async def map(request: Request):
-    basemap_addtext = "        //earthengine_space;\n" 
-    replace_line('templates/ee_map.html', 24, basemap_addtext)
+    ee_map.refresh()
     return templates.TemplateResponse("map_template.html", {"request": request})
 
 @app.post('/map')
 def form_post(request: Request):
-    basemap = simple_eemap()
-    basemap_addtext = "        L.tileLayer('%s').addTo(map);\n" % basemap
-    replace_line('templates/ee_map.html', 24, basemap_addtext)
+    ee_map.addTile(geoviz=None)
     return templates.TemplateResponse('map_template.html', {'request': request})
-
