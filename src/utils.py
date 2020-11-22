@@ -9,11 +9,6 @@ def ee_Initialize():
     os.makedirs(credential_file_path,exist_ok=True)
     with open(credential_file_path + 'credentials', 'w') as file:
         file.write(credential)
-    try:
-        ee.Initialize()        
-    except Exception as e:
-        print(e)
-        return False    
     return True
 
 
