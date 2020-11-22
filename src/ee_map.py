@@ -6,8 +6,6 @@ try:
     ee.Initialize()        
 except Exception as e:
     print(e)
-    return False    
-
 
 def display(geoviz: Optional = None) -> str:
     """ Display a basic Earth Engine map
