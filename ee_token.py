@@ -1,4 +1,5 @@
 import os
+import ee
 import platform
 from subprocess import DEVNULL, STDOUT, check_call
 
@@ -33,5 +34,4 @@ def set_heroku_vars(token_name='EARTHENGINE_TOKEN'):
         print(e)
         return
 
-if __name__ == '__main__':
-    set_heroku_vars(token_name='EARTHENGINE_TOKEN')
+ee.Initialize()
