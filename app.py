@@ -1,15 +1,13 @@
-from src.map_display import * 
+from src.map_display import *
+from src.init_ee import ee_Initialize 
 from ee_token import set_heroku_vars
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-#  Set credentials
-set_heroku_vars(token_name='EARTHENGINE_TOKEN')
-
-# Earth Engine
-ee.Initialize()
+# Init Earth Engine
+ee_Initialize()
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")

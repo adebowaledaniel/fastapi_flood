@@ -1,5 +1,9 @@
+'''
+author: Qiusheng Wu (giswqs)
+If you are reading this take a look to: https://github.com/giswqs/geemap-heroku
+'''
+
 import os
-import ee
 import platform
 from subprocess import DEVNULL, STDOUT, check_call
 
@@ -9,7 +13,8 @@ def set_heroku_vars(token_name='EARTHENGINE_TOKEN'):
         token_name (str, optional): Name of the Earth Engine token. Defaults to 'EARTHENGINE_TOKEN'.
     """
     try:
-        ee_token_dir = "/app/.config/earthengine/"        
+
+        ee_token_dir = os.path.expanduser("~/.config/earthengine/")
         ee_token_file = os.path.join(ee_token_dir, 'credentials')
 
         if not os.path.exists(ee_token_file):
@@ -27,11 +32,10 @@ def set_heroku_vars(token_name='EARTHENGINE_TOKEN'):
                     check_call(['heroku', 'config:set', secret], stdout=DEVNULL, stderr=STDOUT, shell=True)
                 else:
                     check_call(['heroku', 'config:set', secret], stdout=DEVNULL, stderr=STDOUT)
-                ee_token = os.environ['EARTHENGINE_TOKEN']
-                credential = '{"refresh_token":"%s"}' % ee_token            
-                os.makedirs(ee_token_dir, exist_ok=True)
-                with open(ee_token_dir + 'credentials', 'w') as file:
-                    file.write(credential)
+
     except Exception as e:
         print(e)
-        return None
+        return
+
+if __name__ == '__main__':
+    set_heroku_vars(token_name='EARTHENGINE_TOKEN')
