@@ -5,8 +5,12 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+#  Set credentials
+set_heroku_vars(token_name='EARTHENGINE_TOKEN')
 
-ee.Initialize()
+# Earth Engine
+# ee.Initialize()
+
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
