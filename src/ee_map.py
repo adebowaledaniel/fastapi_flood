@@ -1,6 +1,8 @@
 import ee
 from typing import Optional
-from src import utils 
+from src import utils
+ 
+utils.ee_Initialize()
 
 def display(geoviz: Optional = None) -> str:
     """ Display a basic Earth Engine map
@@ -39,3 +41,4 @@ def addTile(geoviz: Optional = None) -> bool:
     basemap = display(geoviz)
     basemap_addtext = "        L.tileLayer('%s').addTo(map);\n" % basemap
     utils.replace_line('templates/ee_map.html', 24, basemap_addtext)
+    return True
