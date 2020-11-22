@@ -25,10 +25,12 @@ async def methodology(request: Request):
 
 @app.get("/map")
 async def map(request: Request):
-    ee_map.refresh()
+    ee_map.position(-77.08767, -11.97586, 18) 
+    ee_map.restart()
     return templates.TemplateResponse("map_template.html", {"request": request})
 
 @app.post('/map')
 def form_post(request: Request):
+    ee_map.position(0,0,2)
     ee_map.addTile(geoviz=None)
     return templates.TemplateResponse('map_template.html', {'request': request})
