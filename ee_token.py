@@ -9,8 +9,7 @@ def set_heroku_vars(token_name='EARTHENGINE_TOKEN'):
         token_name (str, optional): Name of the Earth Engine token. Defaults to 'EARTHENGINE_TOKEN'.
     """
     try:
-
-        ee_token_dir = os.path.expanduser("~/.config/earthengine/")
+        ee_token_dir = "/app/.config/earthengine/"
         os.mkdir(ee_token_dir)
         ee_token_file = os.path.join(ee_token_dir, 'credentials')
 
@@ -30,11 +29,10 @@ def set_heroku_vars(token_name='EARTHENGINE_TOKEN'):
                 else:
                     check_call(['heroku', 'config:set', secret], stdout=DEVNULL, stderr=STDOUT)
                 ee_token = os.environ['EARTHENGINE_TOKEN']
-                credential = '{"refresh_token":"%s"}' % ee_token
-                credential_file_path = os.path.expanduser("~/.config/earthengine/")
-                os.makedirs(credential_file_path,exist_ok=True)
-                with open(credential_file_path + 'credentials', 'w') as file:
+                credential = '{"refresh_token":"%s"}' % ee_token            
+                os.makedirs(ee_token_dir, exist_ok=True)
+                with open(ee_token_dir + 'credentials', 'w') as file:
                     file.write(credential)
     except Exception as e:
         print(e)
-        return
+        return None
