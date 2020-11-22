@@ -29,9 +29,12 @@ def set_heroku_vars(token_name='EARTHENGINE_TOKEN'):
                     check_call(['heroku', 'config:set', secret], stdout=DEVNULL, stderr=STDOUT, shell=True)
                 else:
                     check_call(['heroku', 'config:set', secret], stdout=DEVNULL, stderr=STDOUT)
-
+                ee_token = os.environ['EARTHENGINE_TOKEN']
+                credential = '{"refresh_token":"%s"}' % ee_token
+                credential_file_path = os.path.expanduser("~/.config/earthengine/")
+                os.makedirs(credential_file_path,exist_ok=True)
+                with open(credential_file_path + 'credentials', 'w') as file:
+                    file.write(credential)
     except Exception as e:
         print(e)
         return
-
-ee.Initialize()
