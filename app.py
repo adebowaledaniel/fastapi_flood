@@ -1,6 +1,5 @@
 from src.map_display import *
 from src.init_ee import ee_Initialize 
-from ee_token import set_heroku_vars
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
