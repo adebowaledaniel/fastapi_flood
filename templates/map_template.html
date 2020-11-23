@@ -1,11 +1,146 @@
 {% block header %}
-  <h1>Earth Engine is alive!</h1>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+    <!-- STYLES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"/>-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" crossorigin=""/>
+    <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
+    <link rel="stylesheet" href="{{ url_for('static', path='css/leaflet-sidebar.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', path='css/map.css') }}">
+<!--    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"/>-->
+
+    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="{{ url_for('static', path='js/leaflet-sidebar.js') }}"></script>
+
+
+
+    <nav class="blue" style="height:7%;">
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo">Earth Engine is alive!</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="{{ url_for('home') }}"> home page </a></li>
+                <li><a class="btn waves-effect waves-light" href="buttons.html">Buttons</a></li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <style>
+        html, body{
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+        #Label {
+            position: absolute;
+            top: 0px;
+            left: 5%;
+            height: 500px;
+            width: 500px;
+            z-index: 99;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-    <form method="post">
-      <input type="submit">
-    </form>
-    Return to <a href="{{ url_for('home') }}"> home page </a>
+
+    <div id="Label"></div>
+
+    <div id="mapid" style="height:93%;">
+        <div id="sidebar" class="leaflet-sidebar leaflet-control leaflet-sidebar-right">
+            <!-- Nav tabs -->
+            <div class="leaflet-sidebar-tabs">
+                <ul role="tablist">
+                    <li class="active">
+                        <a href="#home" role="tab" style="outline: none;"><i class="fa fa-bars"></i></a>
+                    </li>
+                    <li>
+                        <a href="#profile" role="tab"><i class="fa fa-user"></i></a>
+                    </li>
+                    <li class="disabled">
+                        <a href="#messages" role="tab"><i class="fa fa-envelope"></i></a>
+                    </li>
+                </ul>
+                <ul role="tablist">
+                    <li>
+                        <a href="#settings" role="tab"><i class="fa fa-gear"></i></a>
+                    </li>
+                </ul>
+            </div>
+            <!-- Tab panes -->
+            <div class="leaflet-sidebar-content">
+                <div class="leaflet-sidebar-pane active" id="home">
+                    <h1 class="leaflet-sidebar-header">
+                    sidebar-v2
+                    <span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
+                    </h1>
+                    <p>
+                        A responsive sidebar for mapping libraries like
+                        <a href="https://leafletjs.com/">Leaflet</a>.
+                    </p>
+                    <p class="lorem">
+                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+                        nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
+                        erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
+                        et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
+                        Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
+                        sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
+                        et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
+                        accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
+                        no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                    </p>
+                </div>
+                <div class="leaflet-sidebar-pane" id="profile">
+                    <h1 class="leaflet-sidebar-header">
+                    Profile<span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
+                    </h1>
+                </div>
+                <div class="leaflet-sidebar-pane" id="messages">
+                    <h1 class="leaflet-sidebar-header">
+                    Messages<span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
+                    </h1>
+                </div>
+                <div class="leaflet-sidebar-pane" id="settings">
+                    <h1 class="leaflet-sidebar-header">
+                    Settings<span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var map = L.map('mapid').setView([47.8090549,13.0351476], 18);
+
+        L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png').addTo(map);
+        //earthengine_space;
+        L.marker([47.8090549,13.0351476]).addTo(map)
+        .bindPopup('2 mujeres un camino :V')
+        .openPopup();
+
+        // add leaflet-geoman controls with some options to the map
+        map.pm.addControls({
+          position: 'topleft',
+          drawCircle: false,
+          drawMarker: false,
+          drawCircleMarker: false,
+          drawPolyline: false,
+          drawPolygon: false,
+          editMode: false,
+          cutPolygon: false
+        });
+
+        // create the sidebar instance and add it to the map
+        // add panels dynamically to the sidebar
+        var sidebar = L.control.sidebar('sidebar', {
+            position: 'left'
+        }).addTo(map);
+
+
+      </script>
 {% endblock %}
-{% extends 'ee_map.html' %} 
+

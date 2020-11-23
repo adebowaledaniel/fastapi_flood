@@ -5,7 +5,7 @@ the div.
 The source code below is the example from the leaflet start page.
 */
 var map = L.map('mapid').setView([-11.97586, -77.08767], 18);
-L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
   attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 L.marker([-11.97586, -77.08767]).addTo(map)
