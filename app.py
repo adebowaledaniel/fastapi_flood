@@ -1,3 +1,5 @@
+import ee
+
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -8,7 +10,8 @@ from src import ee_map
 from src import utils
 
 # Init Earth Engine
-# utils.ee_Initialize()
+utils.load_credentials()
+ee.Initialize()
 
 app = FastAPI()
 
