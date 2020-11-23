@@ -7,7 +7,8 @@ from src import ee_map
 from src import utils
 
 # Init Earth Engine
-utils.ee_Initialize()
+utils.load_credentials()
+ee.Initialize()
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")

@@ -2,7 +2,7 @@ import os
 import ee
 
 # Copy the token to the container
-def ee_Initialize():
+def load_credentials():
     ee_token = os.environ['EARTHENGINE_TOKEN']
     credential = '{"refresh_token":"%s"}' % ee_token
     credential_file_path = os.path.expanduser("~/.config/earthengine/")

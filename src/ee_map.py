@@ -1,11 +1,6 @@
 import ee
 from typing import Optional
 from src import utils
- 
-try:
-    ee.Initialize()        
-except Exception as e:
-    print(e)
 
 def display(geoviz: Optional = None) -> str:
     """ Display a basic Earth Engine map
