@@ -2,14 +2,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
 
+    <!-- CSS and JS Leaflet -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdn.leafletjs.com/leaflet-0.7.2/leaflet.ie.css" />
 
+    <!-- geoman -->
     <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+
+    <!-- Local -->
     <link rel="stylesheet" href="{{ url_for('static', path='css/leaflet-sidebar.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', path='css/map.css') }}">
+
 
     <style>
         body {
@@ -50,23 +56,42 @@
         <div class="sidebar-content">
             <div class="sidebar-pane" id="home">
                 <h1 class="sidebar-header">
-                    sidebar-v2
+                    Flood System
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
-
-                <p>A responsive sidebar for mapping libraries like <a href="http://leafletjs.com/">Leaflet</a> or <a href="http://openlayers.org/">OpenLayers</a>.</p>
-
-                <p class="lorem">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+                <p>Return to the <b><a href="/">home</a></b></p>
+                <b> 1. Generate Geometry </b> 
+                <div class="control" onclick="sendbbox()"><br>
+                    <center>                        
+                            <input class="button is-primary" type="submit" value='Generate AOI'>
+                    </center>
+                </div>
 
                 <form method="post">
-                  <input type="submit">
-                </form>
+                    <label for="fname">xmin:</label><br>
+                    <input type="text" id="xmin" name="xmin"><br>
+                    <label for="lname">ymin:</label><br>
+                    <input type="text" id="ymin" name="ymin"><br>
+                    <label for="lname">xmax:</label><br>
+                    <input type="text" id="xmax" name="xmax"><br>
+                    <label for="lname">ymax:</label><br>
+                    <input type="text" id="ymax" name="ymax"><br><br>
 
-                <div class="control" onclick="myFunction()">
-                    <input class="button is-primary" type="submit" value='Enviar'>
+                    <b> 2. Range base dates </b> <br><br>
+
+                    <input type="date" id="init_start" name="init_start" value="2019-07-22" min="2014-01-01"> -                            
+                    <input type="date" id="init_last" name="init_last" value="2020-07-22" min="2014-01-01"><br><br>
+
+                    <b> 3. Range flood dates </b> <br><br>
+
+                    <input type="date" id="flood_start" name="flood_start" value="2018-07-22" min="2014-01-01"> -                    
+                    <input type="date" id="flood_last" name="flood_last" value="2018-07-22" min="2014-01-01"><br><br>
+
+                    <input type="submit" name="submit" value="Run Flood Model">
                 </div>
-            </div>
+                <br>
 
+ 
             <div class="sidebar-pane" id="profile">
                 <h1 class="sidebar-header">Profile<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
             </div>
@@ -86,59 +111,8 @@
     <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
     <script src="{{ url_for('static', path='js/leaflet-sidebar.js') }}"></script>
     <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
-
-    <script>
-
-        var map = L.map('map').setView([47.8090549,13.0351476], 18);
-
-        L.marker([47.8090549,13.0351476]).addTo(map)
-        .bindPopup('2 mujeres un camino :V')
-        .openPopup();
-
-        L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
-            maxZoom: 18,
-            attribution: 'Map data &copy; OpenStreetMap contributors'
-        }).addTo(map);
-
-        map.pm.addControls({
-          position: 'topleft',
-          drawCircle: false,
-          drawMarker: false,
-          drawCircleMarker: false,
-          drawPolyline: false,
-          drawPolygon: false,
-          editMode: false,
-          cutPolygon: false
-        });
-
-        var sidebar = L.control.sidebar('sidebar').addTo(map);
-    </script>
-
-    <script>
-        function myFunction() {
-          var layers = L.PM.Utils.findLayers(map);
-          var group = L.featureGroup();
-          layers.forEach((layer)=>{
-                group.addLayer(layer);
-          });
-          shapes = group.toGeoJSON();
-          console.log(shapes);
-
-          fetch('map/geometria',{
-            method: "POST",
-            headers: new Headers({
-                "content-type": "application/json"
-            }),
-            body: JSON.stringify(shapes)
-          })
-          .then(function(response){
-            if(response.status !== 200) {
-                console.log('Response status was not 200: ${response.status}');
-                return ;
-            }
-          })
-        }
-
-    </script>
-
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="{{ url_for('static', path='js/bbox.js') }}"></script>
+    <script src="{{ url_for('static', path='js/bbox.js') }}"></script>
+    <script src="{{ url_for('static', path='js/my_map.js') }}"></script>
 {% endblock %}

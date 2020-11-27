@@ -1,11 +1,10 @@
-import ee
-
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 
+import ee
 from src import ee_map
 from src import utils
 
@@ -32,10 +31,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
@@ -48,17 +44,8 @@ async def methodology(request: Request):
 
 @app.get("/map")
 async def map(request: Request):
-    ee_map.position(-77.08767, -11.97586, 18) 
-    ee_map.restart()
     return templates.TemplateResponse("map.html", {"request": request})
 
-@app.post('/map')
-async def form_post(request: Request):
-    ee_map.position(0,0,2)
-    ee_map.addTile(geoviz=None)
-    return templates.TemplateResponse('map.html', {'request': request})
-
-@app.post("/map/geometria")
-async def geometria(request: Request):
-    geometries = await request.body()
-    print(geometries)
+@app.post("/map")
+async def flood_model(request: Request, xmin:float = Form(...), ymin:float = Form(...)):
+    return templates.TemplateResponse("map.html", {"request": request})
