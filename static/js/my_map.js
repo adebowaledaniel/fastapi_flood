@@ -3,31 +3,80 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
     maxZoom: 18,
     attribution: 'Map data &copy; OpenStreetMap contributors'
 }).addTo(map);
-L.Control.geocoder().addTo(map);
+//L.Control.geocoder().addTo(map);
 
-map.pm.addControls({
-  position: 'topleft',
-  drawCircle: false,
-  drawMarker: false,
-  drawCircleMarker: false,
-  drawPolyline: false,
-  drawPolygon: false,
-  editMode: false,
-  cutPolygon: false
+let drawItems = new L.FeatureGroup();
+map.addLayer(drawItems);
+
+var drawControl = new L.Control.Draw({
+    draw: {
+        toolbar: {
+            buttons: {
+                polygon: 'Draw an awesome polygon'
+                    }
+                 }
+           },
+    edit: {
+        featureGroup: drawItems,
+        poly: {
+            allowIntersection: false
+        }
+    }
+})
+map.addControl(drawControl);
+
+map.on("draw:created", function(e) {
+  //cleanMap();
+  let type = e.layerType;
+  var layer = e.layer;
+
+  var shape = layer.toGeoJSON()
+  console.log(shape);
+  var shape_for_db = JSON.stringify(shape);
+  console.log(shape_for_db);
+
+  drawItems.addLayer(layer);
+
+  var shapes = getShapes(drawItems);
 });
+
+var getShapes = function(drawItems){
+    var shapes = [];
+    drawItems.eachLayer(function(layer){
+        if (layer instanceof L.Polyline){
+            shapes.push(layer.getLatLngs())
+        }
+        if (layer instanceof L.Circle) {
+            shapes.push([layer.getLatLng()])
+        }
+        if (layer instanceof L.Marker) {
+            shapes.push([layer.getLatLng()]);
+        }
+    });
+    return shapes;
+};
+
+var cleanMap = function(){
+    for(i in m._layers) {
+        if(m._layers[i]._path != undefined) {
+            try {
+                m.removeLayer(m._layers[i]);
+            }
+            catch(e) {
+                console.log("problem with " + e + m._layers[i]);
+            }
+        }
+    }
+};
 
 var sidebar = L.control.sidebar('sidebar').addTo(map);
 sidebar.open('home');
 
-
 function sendbbox() {
-  var layers = L.PM.Utils.findLayers(map);
-  var group = L.featureGroup();
-  layers.forEach((layer)=>{
-        group.addLayer(layer);
-  });
-  shapes = bbox(group.toGeoJSON());
-  if (shapes[0] == "Infinity") {
+    var data = drawItems.getBounds().toBBoxString();
+    var shapes = data.split(",");
+
+    if (shapes[0] == "Infinity") {
     var area_name = document.getElementById("select").value
     switch (area_name) {
       case "baumgarten":
@@ -84,15 +133,14 @@ function sendbbox() {
         document.getElementById("ymax").value = 48.387;
         break;
     }
-  } else {
+    } else {
     // Updgrade bbox
-    document.getElementById("xmin").value = shapes[0].toFixed(3);
-    document.getElementById("ymin").value = shapes[1].toFixed(3);
-    document.getElementById("xmax").value = shapes[2].toFixed(3);
-    document.getElementById("ymax").value = shapes[3].toFixed(3);
-  } 
-  var xmean = (parseFloat(document.getElementById("xmin").value) + parseFloat(document.getElementById("xmax").value))/2
-  var ymean = (parseFloat(document.getElementById("ymin").value) + parseFloat(document.getElementById("ymax").value))/2
-  map.setView([ymean, xmean], 15);
+        document.getElementById("xmin").value = shapes[0].toFixed(3);
+        document.getElementById("ymin").value = shapes[1].toFixed(3);
+        document.getElementById("xmax").value = shapes[2].toFixed(3);
+        document.getElementById("ymax").value = shapes[3].toFixed(3);
+    }
+    var xmean = (parseFloat(document.getElementById("xmin").value) + parseFloat(document.getElementById("xmax").value))/2
+    var ymean = (parseFloat(document.getElementById("ymin").value) + parseFloat(document.getElementById("ymax").value))/2
+    map.setView([ymean, xmean], 15);
 }
-
