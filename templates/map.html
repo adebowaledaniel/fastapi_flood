@@ -5,15 +5,12 @@
     <!-- CSS and JS Leaflet -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-
-    <!-- geoman -->
-    <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <link rel="stylesheet" href="https://cdn.leafletjs.com/leaflet-0.7.2/leaflet.ie.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
 
     <!-- Local -->
     <link rel="stylesheet" href="{{ url_for('static', path='css/leaflet-sidebar.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', path='css/map.css') }}">
-
 
     <style>
         body {
@@ -59,7 +56,7 @@
                 </h1>
                 <p>Return to the <b><a href="/">home</a></b></p>
                 <b> Draw a rectangle  </b> <br>
-                <b> or select a default area </b><br><br> 
+                <b> or select a default area </b><br><br>
                 <select name="select" id="select">
                     <option value ="baumgarten">baumgarten</option>
                     <option value ="jedenspeigen">jedenspeigen</option>
@@ -70,7 +67,7 @@
                     <option value ="stillfried">stillfried</option>
                     <option value ="marchegg">marchegg</option>
                     <option value ="angern">angern</option>
-                </select> <br>           
+                </select> <br>
 
                     <div id="control_aoi" onclick="sendbbox()"><br>
                             <input class="button is-primary" type="submit" value='Generate AOI'>
@@ -85,26 +82,26 @@
                     <input type="text" id="xmax" name="xmax"><br>
                     <label for="lname">ymax:</label><br>
                     <input type="text" id="ymax" name="ymax"><br><br>
-                        
+
                     <b> Range base dates </b> <br><br>
 
-                    <input type="date" id="init_start" name="init_start" value="2019-03-01" min="2014-01-01"> -                            
+                    <input type="date" id="init_start" name="init_start" value="2019-03-01" min="2014-01-01"> -
                     <input type="date" id="init_last" name="init_last" value="2019-03-10" min="2014-01-01"><br><br>
 
                     <b> Range flood dates </b> <br><br>
 
-                    <input type="date" id="flood_start" name="flood_start" value="2019-03-10" min="2014-01-01"> -                    
+                    <input type="date" id="flood_start" name="flood_start" value="2019-03-10" min="2014-01-01"> -
                     <input type="date" id="flood_last" name="flood_last" value="2019-03-23" min="2014-01-01"><br><br>
-                    
+
                     <b><label for="fname">Waterlog threshold:</label></b><br><br>
                     <input type="text" id="threshold" name="threshold" value = "1.5"><br><br>
 
                     <input type="submit" name="action" value="display">
-                    <input type="submit" name="action" value="download">        
+                    <input type="submit" name="action" value="download">
                 </div>
                 <br>
 
- 
+
             <div class="sidebar-pane" id="profile">
                 <h1 class="sidebar-header">Profile<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
             </div>
@@ -129,10 +126,14 @@
     </div>
 
     <div id="map" class="sidebar-map"></div>
+
     <script src="https://unpkg.com/leaflet@1.7.0/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.8.0/dist/leaflet-geoman.min.js"></script>
-    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script src="{{ url_for('static', path='js/leaflet-sidebar.js') }}"></script>
+    <!--    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>-->
+    <!--    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>-->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+
     <script src="{{ url_for('static', path='js/bbox.js') }}"></script>
     <script src="{{ url_for('static', path='js/my_map.js') }}"></script>
     <script type="text/javascript">
