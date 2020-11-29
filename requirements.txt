@@ -5,3 +5,4 @@ Jinja2==2.11.2
 jinja2-time==0.2.0
 earthengine-api==0.1.239
 python-multipart
+geopandas
