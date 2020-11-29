@@ -4,12 +4,10 @@
 
     <!-- CSS and JS Leaflet -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdn.leafletjs.com/leaflet-0.7.2/leaflet.ie.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 
     <!-- geoman -->
     <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
-
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 
     <!-- Local -->
@@ -56,16 +54,27 @@
         <div class="sidebar-content">
             <div class="sidebar-pane" id="home">
                 <h1 class="sidebar-header">
-                    Flood System
+                    Waterlog System
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
                 <p>Return to the <b><a href="/">home</a></b></p>
-                <b> 1. Generate Geometry </b> 
-                <div class="control" onclick="sendbbox()"><br>
-                    <center>                        
+                <b> Draw a rectangle  </b> <br>
+                <b> or select a default area </b><br><br> 
+                <select name="select" id="select">
+                    <option value ="baumgarten">baumgarten</option>
+                    <option value ="jedenspeigen">jedenspeigen</option>
+                    <option value ="droesing">droesing</option>
+                    <option value ="hohenau">hohenau</option>
+                    <option value ="rabensburg">rabensburg</option>
+                    <option value ="duernkrut">duernkrut</option>
+                    <option value ="stillfried">stillfried</option>
+                    <option value ="marchegg">marchegg</option>
+                    <option value ="angern">angern</option>
+                </select> <br>           
+
+                    <div id="control_aoi" onclick="sendbbox()"><br>
                             <input class="button is-primary" type="submit" value='Generate AOI'>
-                    </center>
-                </div>
+                    </div>
 
                 <form method="post">
                     <label for="fname">xmin:</label><br>
@@ -76,18 +85,22 @@
                     <input type="text" id="xmax" name="xmax"><br>
                     <label for="lname">ymax:</label><br>
                     <input type="text" id="ymax" name="ymax"><br><br>
+                        
+                    <b> Range base dates </b> <br><br>
 
-                    <b> 2. Range base dates </b> <br><br>
+                    <input type="date" id="init_start" name="init_start" value="2019-03-01" min="2014-01-01"> -                            
+                    <input type="date" id="init_last" name="init_last" value="2019-03-10" min="2014-01-01"><br><br>
 
-                    <input type="date" id="init_start" name="init_start" value="2019-07-22" min="2014-01-01"> -                            
-                    <input type="date" id="init_last" name="init_last" value="2020-07-22" min="2014-01-01"><br><br>
+                    <b> Range flood dates </b> <br><br>
 
-                    <b> 3. Range flood dates </b> <br><br>
+                    <input type="date" id="flood_start" name="flood_start" value="2019-03-10" min="2014-01-01"> -                    
+                    <input type="date" id="flood_last" name="flood_last" value="2019-03-23" min="2014-01-01"><br><br>
+                    
+                    <b><label for="fname">Waterlog threshold:</label></b><br><br>
+                    <input type="text" id="threshold" name="threshold" value = "1.5"><br><br>
 
-                    <input type="date" id="flood_start" name="flood_start" value="2018-07-22" min="2014-01-01"> -                    
-                    <input type="date" id="flood_last" name="flood_last" value="2018-07-22" min="2014-01-01"><br><br>
-
-                    <input type="submit" name="submit" value="Run Flood Model">
+                    <input type="submit" name="action" value="display">
+                    <input type="submit" name="action" value="download">        
                 </div>
                 <br>
 
@@ -103,16 +116,50 @@
             <div class="sidebar-pane" id="settings">
                 <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
             </div>
+
+            Estimated flood extent: {{flood_extent}} <br>
+            Estimated number of exposed people: {{people_exposed}} <br>
+            Estimated affected cropland: {{cropland_exposed}} <br>
+            Estimated affected urban areas: {{urband_exposed}} <br><br>
+
+            Disclaimer: This product has been derived automatically without validation data. All geographic 
+            information has limitations due to the scale, resolution, date and interpretation of the original
+            source materials. No liability concerning the content or the use thereof is assumed by the producer.
         </div>
     </div>
 
     <div id="map" class="sidebar-map"></div>
-
-    <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
-    <script src="{{ url_for('static', path='js/leaflet-sidebar.js') }}"></script>
-    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.0/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.8.0/dist/leaflet-geoman.min.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-    <script src="{{ url_for('static', path='js/bbox.js') }}"></script>
+    <script src="{{ url_for('static', path='js/leaflet-sidebar.js') }}"></script>
     <script src="{{ url_for('static', path='js/bbox.js') }}"></script>
     <script src="{{ url_for('static', path='js/my_map.js') }}"></script>
+    <script type="text/javascript">
+        function upgrade_map() {
+            var before_waterlog = L.tileLayer("{{before_waterlog|safe}}").addTo(map);
+            var after_waterlog = L.tileLayer("{{after_waterlog|safe}}").addTo(map);
+            var waterlog_results = L.tileLayer("{{waterlog_results|safe}}").addTo(map);
+            var baseMaps = {
+                "Before waterlog": before_waterlog,
+                "After waterlog": after_waterlog,
+                "Final results": waterlog_results
+            };
+
+            map.setView([{{ymean}}, {{xmean}}], 15);
+            L.control.layers({}, baseMaps).addTo(map);
+            
+            document.getElementById("xmin").value = {{xmin}};
+            document.getElementById("ymin").value = {{ymin}};
+            document.getElementById("xmax").value = {{xmax}};
+            document.getElementById("ymax").value = {{ymax}};
+            
+            document.getElementById("init_start").value = "{{init_start}}";
+            document.getElementById("init_last").value = "{{init_last}}";
+            document.getElementById("flood_start").value = "{{flood_start}}";
+            document.getElementById("flood_last").value = "{{flood_last}}";
+
+        }
+        upgrade_map()
+    </script>
 {% endblock %}

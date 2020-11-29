@@ -6,7 +6,53 @@
   preprocessing steps: Thermal-Noise Removal, Radiometric calibration, Terrain-correction
   hence only a Speckle filter needs to be applied in the preprocessing.
 """
-import ee
+from zipfile import ZipFile
+import geopandas as gpd
+from pathlib import Path
+from typing import List
+import ee, re, os
+import asyncio
+from typing import Optional
+
+geoviz_app = {
+    "s1_img" : {"min":-25, "max":0},
+    "diff_s1" : {"min":0, "max":2},
+    "flood" : {"palette": "0000FF"},
+    "populationCountVis" : {"min": 0, "max": 200.0, "palette": ['060606','337663','337663','ffffff']},
+    "populationExposedVis" : {"min": 0, "max": 200.0, "palette": ['yellow', 'orange', 'red']},
+    "LCVis" : {"min": 1.0, "max": 17.0,
+               "palette": ['05450a', '086a10', '54a708', '78d203', '009900', 'c6b044', 'dcd159',
+                           'dade48', 'fbff13', 'b6ff05', '27ff87', 'c24f44', 'a5a5a5', 'ff6d4c',
+                           '69fff8', 'f9ffa4', '1c0dff']},
+    "croplandVis": {"min": 0, "max": 14.0, "palette": ['30b21c']},
+    "urbanVis" : {"min": 0, "max": 13.0, "palette": ['grey']}
+}
+
+
+# Display basemap
+def display(dict_db) -> dict:
+    """ Display a basic Earth Engine map
+    Returns:
+        str: earthengine tiles googleapis
+    """    
+    # S1 before flood
+    s1_bf = ee.Image.visualize(dict_db["before_flood"], **geoviz_app["s1_img"])
+    s1_bf_id = ee.data.getMapId({"image": s1_bf})["tile_fetcher"].url_format
+    
+    # S1 after flood
+    s1_af = ee.Image.visualize(dict_db["after_flood"], **geoviz_app["s1_img"])
+    s1_af_id = ee.data.getMapId({"image": s1_af})["tile_fetcher"].url_format
+    
+    # Flood results 
+    s1_fresults = ee.Image.visualize(dict_db["flood_results"], **geoviz_app["flood"])
+    s1_fresults_id = ee.data.getMapId({"image": s1_fresults})["tile_fetcher"].url_format
+    
+    layer_to_display = {
+        "before_flood": s1_bf_id,
+        "after_flood": s1_af_id,
+        "s1_fresults_id": s1_fresults_id 
+    }
+    return layer_to_display
 
 # Extract date from meta data
 def dates(imgcol):
@@ -21,7 +67,7 @@ def db_creator(base_period , flood_period, geometry, polarization="VH",
                pass_direction="DESCENDING", quiet=False):
 
     # rename selected geometry feature
-    aoi = ee.FeatureCollection(ee.Geometry.Polygon(geometry))
+    aoi = ee.FeatureCollection(geometry)
 
     # Load and filter Sentinel-1 GRD data by predefined parameters
     collection = ee.ImageCollection("COPERNICUS/S1_GRD")\
@@ -241,3 +287,22 @@ def urban_exposed(dict_db):
         .getInfo()
     dict_db.update({"urban_area_exposed_stats": urban_area_ha})
     return dict_db
+
+def raster_to_vector(image, geom):
+    vector_img = image.unmask(0).reduceToVectors(
+        geometry = geom,
+        scale = 10
+    )
+    return vector_img.getInfo()
+
+def searching_all_files(path:str = ".", pattern : str="\.tiff$|\.csv$") -> List:
+    dirpath = Path(path)
+    assert(dirpath.is_dir())
+    file_list = []
+    for x in dirpath.iterdir():
+        if x.is_file() and re.search(pattern, x.as_posix()):
+            file_list.append(x.absolute().as_posix())
+        elif x.is_dir():
+            file_list.extend(searching_all_files(x, pattern))
+    return file_list
+

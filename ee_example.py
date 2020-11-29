@@ -1,20 +1,22 @@
 from src import  flood_model
+import ee
+ee.Initialize()
 
 # base period
-before_start = "2019-03-01"
-before_end = "2019-03-10"
-base_period = (before_start, before_end)
+init_start = "2019-03-01"
+init_last = "2019-03-10"
+base_period = (init_start, init_last)
 
 # Now set the same parameters for AFTER the flood.
-after_start = "2019-03-10"
-after_end = "2019-03-23"
-flood_period = (after_start, after_end)
+flood_start = "2019-03-10"
+flood_last = "2019-03-23"
+flood_period = (flood_start, flood_last)
 
-geometry = [[[31.59324397753903, -16.467062381836637],
-          [31.59324397753903, -20.83766152348578],
-          [38.163068196289025, -20.83766152348578],
-          [38.163068196289025, -16.467062381836637]]]
-
+xmin = 12.923 
+ymin = 47.819
+xmax = 13.067
+ymax = 47.875
+geometry = ee.Geometry.Rectangle(xmin, ymin, xmax, ymax)
 difference_threshold = 1.25
 
 dict_db = flood_model.db_creator(base_period, flood_period, geometry)
@@ -22,3 +24,5 @@ flood_added = flood_model.flood_estimation(dict_db=dict_db)
 pop_added = flood_model.population_exposed(flood_added)
 cropland_added = flood_model.cropland_exposed(pop_added)
 urban_added = flood_model.urban_exposed(cropland_added)
+
+flood_model.display(image = urban_added["flood_results"])
