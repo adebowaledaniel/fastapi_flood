@@ -49,6 +49,15 @@
         </header>
         
         <!-- TEXT HERE -->
+        <p>The waterlogging detection system workflow is based on a change detection approach using Sentinel-1 images within Google Earth Engine (GEE). These SAR image collections available in GEE are radiometrically calibrated, terrain-corrected products generated using Sentinel-1 Toolbox, and are updated daily.</p>
+
+        <p>The system enables user-defined dates, i.e. before the flood event and after the flood event, as inputs for the change detection. In the backend, the system selects the Interferometric Wide Swath (IW) mode of Sentinel-1, VH polarization, and clips the available image collections with the area of interest (AOI) as specified by the user. To further reduce the speckle (noise), a smoothing filtering of radius 50 was applied.</p>
+        
+        <p>The image collection available in GEE has been calibrated and corrected, and the backscatter coefficient converted to decibels (dB). The change detection within the user-defined time range is achieved by comparing the pre and post-flood backscatter. A threshold is applied to the output, showing the degree of changes per pixel; areas with pixels greater than the threshold are considered as flooded areas.</p>
+        
+        <p>In order to reduce the false positives caused by the noise and other environmental factors, and to exclude permanent water areas, the global surface water dataset is used by GEE. Areas with a slope higher than 5% are masked out from the results using the Copernicus DEM (10 meters) of Austria and Slovakia. 
+        
+        The waterlogging detection system provides the user the option to visualize and download the waterlogged area within the region of interest as a shapefile format to be used in GIS.</p>
         <!-- TEXT HERE -->
 
         <footer class="mastfoot mt-auto">
