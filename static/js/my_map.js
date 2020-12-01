@@ -1,4 +1,4 @@
-var map = L.map('map').setView([47.8090549,13.0351476], 17);
+var map = L.map('map').setView([48.303,16.865], 15);
 L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
     maxZoom: 18,
     attribution: 'Map data &copy; OpenStreetMap contributors'
@@ -141,5 +141,6 @@ function sendbbox() {
     }
     var xmean = (parseFloat(document.getElementById("xmin").value) + parseFloat(document.getElementById("xmax").value))/2
     var ymean = (parseFloat(document.getElementById("ymin").value) + parseFloat(document.getElementById("ymax").value))/2
-    map.setView([ymean, xmean], 17);
+    map.setView([ymean, xmean], 15);
 }
+

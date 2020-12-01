@@ -79,21 +79,18 @@ async def flood_model(
     flood_added = flood_estimation(dict_db, difference_threshold=threshold)
     
     if action == "display":
-        pop_added = population_exposed(flood_added)
-        cropland_added = cropland_exposed(pop_added)
-        urban_added = urban_exposed(cropland_added)
+        #pop_added = population_exposed(flood_added)
+        #cropland_added = cropland_exposed(pop_added)
+        #urban_added = urban_exposed(cropland_added)
         
         # 4. Upload gee tileid
-        tileids = display(urban_added)
+        tileids = display(flood_added)
     
         return templates.TemplateResponse(
             "map.html", 
             {
                 "request": request,
-                "flood_extent": urban_added["flood_area_stats"],
-                "people_exposed": urban_added["population_exposed_stats"],
-                "cropland_exposed": urban_added["croparea_exposed_stats"],
-                "urband_exposed": urban_added["urban_area_exposed_stats"],
+                "flood_extent": str(flood_added["flood_area_stats"]) + " hectares",
                 "before_waterlog": tileids["before_flood"],
                 "after_waterlog": tileids["after_flood"],
                 "waterlog_results": tileids["s1_fresults_id"],

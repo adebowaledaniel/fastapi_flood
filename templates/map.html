@@ -29,6 +29,18 @@
         }
     </style>
 
+    <script type="text/javascript">
+        function display_flood_dates(index = 0) {
+            if (index == 0) {
+                return document.write(flood_start.value)
+
+            } else {
+                return document.write(flood_last.value)
+            }
+        }
+    </script>
+
+
 {% endblock %}
 
 {% block content %}
@@ -49,8 +61,8 @@
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
                 <p>Return to the <b><a href="/">homepage</a></b></p>
-                <b> Draw a rectangle  </b> <br>
-                <b> or select a default area </b><br><br>
+                <b> Draw a rectangle or select a default area</b> <br>
+                <br>
                 <select name="select" id="select">
                     <option value ="none">none</option>
                     <option value ="baumgarten">Baumgarten</option>
@@ -89,7 +101,7 @@
                     <input type="date" id="flood_last" name="flood_last" value="2020-10-25" min="2014-01-01"><br><br>
 
                     <b><label for="fname">Waterlog threshold model:</label></b><br><br>
-                    <input type="text" id="threshold" name="threshold" value = "1.35"><br><br>
+                    <input type="text" id="threshold" name="threshold" value = "1.30"><br><br>
                     <input type="submit" name="action" value="display">
                     <input type="submit" name="action" value="download">
                 </div>
@@ -107,28 +119,27 @@
             <div class="sidebar-pane" id="settings">
                 <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
             </div>
-            
-            
-            <b>Flood status between:</b><br>
+                        
+            <b>Waterlogging status between:</b><br>
             <div id="result_message">
-                {{flood_start}} and {{flood_last}}
+                <b><script>display_flood_dates(0)</script> and <script>display_flood_dates(1)</script></b>
             </div>
             <br>
             <b>Estimated Waterlogging extent:</b>
             <div id="result_message">
-                {{flood_extent}} hectares
+                <b>{{flood_extent}}</b><br>
             </div>
             <!-- To be implemented later 
             Estimated number of exposed people: {{people_exposed}} <br>
             Estimated affected cropland: {{cropland_exposed}} <br>
             Estimated affected urban areas: {{urband_exposed}} <br><br>
             -->
-            <br><br>
-            <b>Disclaimer:</b> This product has been derived automatically without validation data. All geographic 
+            <br>
+            <b>Disclaimer:</b> This product has been derived automatically <b>without validation data</b>. All geographic 
             information has limitations due to the scale, resolution, date and interpretation of the original
             source materials. No liability concerning the content or the use thereof is assumed by the producer.
             <br><br>
-            This project has been inspired by <a href="https://un-spider.org/advisory-support/recommended-practices/recommended-practice-google-earth-engine-flood-mapping/step-by-step">un-spider flood mapping</a>.
+            This project has been inspired by <a href="https://un-spider.org/advisory-support/recommended-practices/recommended-practice-google-earth-engine-flood-mapping/step-by-step">UN-SPIDER flood mapping</a>.
         </div>
     </div>
 
