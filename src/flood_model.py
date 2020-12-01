@@ -291,7 +291,8 @@ def urban_exposed(dict_db):
 def raster_to_vector(image, geom):
     vector_img = image.unmask(0).reduceToVectors(
         geometry = geom,
-        scale = 10
+        scale = 10,
+        bestEffort =True
     )
     return vector_img.getInfo()
 

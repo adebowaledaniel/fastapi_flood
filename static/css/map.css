@@ -59,3 +59,8 @@ navbar {
 .navbar.active .navbar-brand {
     color: #555;
 }
+
+#result_message {
+    color: #d14836;
+    font-size: 12px;
+}
