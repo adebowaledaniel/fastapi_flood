@@ -1,6 +1,5 @@
 # Flood detection with GEE
-See live demo : https://austriafloodmap.herokuapp.com/methodology
-
+See live demo : 
 FastAPI web application for waterlogged areas detection in the March and Thaya rivers, Austria using Google Earth Engine in the backend.
 
 This app is for **demonstration only** and has very limited functionality. Exporting results as a shapefile is possible.
